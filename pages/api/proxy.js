@@ -6,7 +6,7 @@ const cors = initMiddleware(Cors(corsOptionsDelegate))
 const proxy = async (req, res) => {
   await cors(req, res)
   const headers = {}
-  const validHeaders = ['authorization', 'content-type', 'client-id']
+  const validHeaders = ['authorization', 'content-type', 'client-id', 'select-record', 'api-version']
   validHeaders.forEach(header => {
     if (req.headers[header]) {
       headers[header] = req.headers[header]
@@ -23,9 +23,11 @@ const proxy = async (req, res) => {
     }
   }
 
+  let returnStatus = 200
   const proxyResponse = await fetch(req.headers['x-url'], proxyRequest)
     .then(res => {
-      if (res.headers.get('content-type').includes('application/json')) {
+      // returnStatus = res.status
+      if (res.headers.get('content-type').includes('json')) {
         return res.json()
       } else {
         const chunks = []
@@ -38,8 +40,10 @@ const proxy = async (req, res) => {
       }
     })
 
+  proxyResponse.headers = res.headers
 
-  res.status(200).send(proxyResponse)
+
+  res.status(returnStatus).send(proxyResponse)
 }
 
 export default proxy
