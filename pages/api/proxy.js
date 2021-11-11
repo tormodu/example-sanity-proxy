@@ -6,7 +6,7 @@ const cors = initMiddleware(Cors(corsOptionsDelegate))
 const proxy = async (req, res) => {
   await cors(req, res)
   const headers = {}
-  const validHeaders = ['authorization', 'content-type', 'client-id', 'select-record', 'api-version', 'x-url', 'X-URL']
+  const validHeaders = ['authorization', 'content-type', 'client-id', 'select-record', 'api-version']
   validHeaders.forEach(header => {
     if (req.headers[header]) {
       headers[header] = req.headers[header]
